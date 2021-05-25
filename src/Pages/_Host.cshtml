@@ -1,0 +1,63 @@
+﻿@page "/"
+@namespace PhotoOrganizer.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PhotoOrganizer</title>
+    <base href="~/" />
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <link href="css/site.css" rel="stylesheet" />
+    <link href="PhotoOrganizer.styles.css" rel="stylesheet" />
+    <script>
+        const { BrowserWindow, dialog } = require('electron').remote;
+
+        function win() {
+            return BrowserWindow.getFocusedWindow();
+        }
+
+        function defaultNull(obj) { // C#側から渡ってくるオプションは存在しないプロパティにnullが入っているが、electronのAPIはキー無し（undefined）を期待しているのでエラーを吐く場合があります。それの回避。
+            const newObj = { ...obj };
+            for (const key of Object.keys(newObj)) {
+                if (newObj[key] === null) delete newObj[key];
+            }
+            return newObj;
+        }
+
+        function showOpenDialog(options) { 
+            return dialog.showOpenDialog(win(), defaultNull(options));
+        }
+
+        function showErrorBox(title, content) { 
+            return dialog.showErrorBox(title || undefined, content || undefined);
+        }
+
+        win().on('close', function(e) {
+            DotNet.invokeMethodAsync("seedtable-egui", "OnClose");
+        });
+
+    </script>
+</head>
+<body>
+    <component type="typeof(App)" render-mode="ServerPrerendered" />
+
+    <div id="blazor-error-ui">
+        <environment include="Staging,Production">
+            An error has occurred. This application may no longer respond until reloaded.
+        </environment>
+        <environment include="Development">
+            An unhandled exception has occurred. See browser dev tools for details.
+        </environment>
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+
+    <script src="_framework/blazor.server.js"></script>
+</body>
+</html>

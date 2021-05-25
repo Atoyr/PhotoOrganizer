@@ -1,0 +1,51 @@
+@page "/"
+@inject IJSRuntime JS
+
+<div>
+  <h2>ファイル移動</h2>
+  <div class="container px-2">
+    <div class="row">
+      <div class="col">
+        <label>移動元フォルダ</label>
+        <div class="d-flex">
+          <div class="flex-grow-1 px-1">
+            <input class="form-control" @bind="FromPath" @bind:event="oninput" />
+          </div>
+          <div class="px-1">
+            <button type="button" class="btn btn-secondary" @onclick="OpenFromFolderPath">参照</button>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <label>移動先フォルダ</label>
+        <div class="d-flex">
+          <div class="flex-grow-1 px-1">
+            <input class="form-control" @bind="ToPath" @bind:event="oninput" />
+          </div>
+          <div class="px-1">
+            <button type="button" class="btn btn-secondary" @onclick="OpenToFolderPath">参照</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card m-1">
+      <div class="card-body">
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="fileActionType" id="fileActionTypeCopy" value="copy" @onchange="eventArgs => { CheckboxClicked(eventArgs.Value); }" checked>
+          <label class="form-check-label" for="fileActionTypeCopy">
+            ファイルをコピー
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="fileActionType" id="fileActionTypeMove" value="move" @onchange="eventArgs => { CheckboxClicked(eventArgs.Value); }">
+          <label class="form-check-label" for="fileActionTypeMove">
+            ファイルを移動
+          </label>
+        </div>
+      </div> 
+    </div>
+    <div class="text-right">
+      <button type="button" class="btn btn-primary px-1 py-1" @onclick="Execute">実行</button>
+    </div>
+  </div>
+</div>
